@@ -8,12 +8,19 @@ end="\033[0m\e[0m"
 
 # variables
 pwd=$PWD
-port=$1
+
+echo -e "\n${green} Bienvenido al generador de sandboxes, recuerde tener su 'Dockerfile modificado'.${end}"
+
+echo -e "${purple}"; read -p "Ingese el nombre de la imagen -> " imageName
+
+echo -e "${purple}"; read -p "Ingese el puerto a exponer -> " port
+
+echo -e "\n"
 
 if [ -n "$port" ]; then
     echo -e "${red}Se paso el puerto $port para el despligue\n${end}"
 else
-    echo -e "${red}No se paso ningun puerto para exponer como primer parametro\n${end}"
+    echo -e "${red}No se paso ningun puerto para exponer como parametro\n${end}"
 fi
 
 sleep 1
@@ -24,12 +31,12 @@ function createJustfile ()
   touch .justfile
 
   echo "build:" >> .justfile 2> /dev/null
-  echo "    podman build -t user/sandbox:nextjs ." >> .justfile 2> /dev/null
+  echo "    podman build -t user/sandbox:${imageName} ." >> .justfile 2> /dev/null
   echo "run:" >> .justfile 2> /dev/null
   if [ -z "$1" ]; then
-    echo "    podman run -it -v \$PWD/project:/home/archuser/project -p $port:$port --rm user/sandbox:nextjs" >> .justfile 2> /dev/null
+    echo "    podman run -it -v \$PWD/project:/home/archuser/project -p $port:$port --rm user/sandbox:${imageName}" >> .justfile 2> /dev/null
   else
-    echo "    podman run -it -v \$PWD/project:/home/archuser/project --rm user/sandbox:nextjs" >> .justfile 2> /dev/null
+    echo "    podman run -it -v \$PWD/project:/home/archuser/project --rm user/sandbox:${imageName}" >> .justfile 2> /dev/null
   fi
 
 }
@@ -63,8 +70,8 @@ echo -e "\n\n${green}Finalizado${end}"
 echo -e "\n${purple}Si tiene just instalado, puede correr 'just run', en caso contrario ejecute ${purple}\n"
 
 if [ -n "$port" ]; then
-  echo -e "${green}  docker run -it -v "$PWD/project:/home/archuser/project" -p ${port}:${port} --rm user/sandbox:nextjs"
+  echo -e "${green}  docker run -it -v "$PWD/project:/home/archuser/project" -p ${port}:${port} --rm user/sandbox:${imageName}"
 else
-  echo -e "${green}  docker run -it -v "$PWD/project:/home/archuser/project" --rm user/sandbox:nextjs"
+  echo -e "${green}  docker run -it -v "$PWD/project:/home/archuser/project" --rm user/sandbox:${imageName}"
 fi
 
