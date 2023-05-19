@@ -63,7 +63,7 @@ echo -e "\n${purple}Creando imagen \n${end}"
 if command -v just &> /dev/null; then
     just build
   else
-    docker build -t user/sandbox:nextjs .
+    docker build -t user/sandbox:${imageName} .
 fi
 
 echo -e "\n\n${green}Finalizado${end}"
