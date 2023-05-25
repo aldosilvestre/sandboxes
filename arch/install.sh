@@ -25,7 +25,7 @@ function createJustfile ()
   echo "build:" >> .justfile 2> /dev/null
   echo "    podman build -t user/sandbox:${imageName} ." >> .justfile 2> /dev/null
   echo "run:" >> .justfile 2> /dev/null
-  echo "    podman run --network host --name ${imageName} -it -v \$PWD/project:/home/archuser/project --rm user/sandbox:${imageName}" >> .justfile 2> /dev/null
+  echo "    podman run --network host -it -v \$PWD/project:/home/archuser/project --rm user/sandbox:${imageName}" >> .justfile 2> /dev/null
 
 }
 
@@ -57,5 +57,5 @@ fi
 echo -e "\n\n${green}Finalizado${end}"
 echo -e "\n${purple}Si tiene just instalado, puede correr 'just run', en caso contrario ejecute ${purple}\n"
 
-echo -e "${green}  docker run --network host --name ${imageName} -it -v "$PWD/project:/home/archuser/project" --rm user/sandbox:${imageName}"
+echo -e "${green}  docker run --network host -it -v "$PWD/project:/home/archuser/project" --rm user/sandbox:${imageName}"
 

@@ -6,11 +6,14 @@ RUN pacman -S --noconfirm \
       bash \
       ca-certificates \
       neovim \
+      npm \
+      lsd \
+      bat \
       curl \
       wget \
-      zsh \
       git \
       base-devel \
+      zsh \
       && \
       rm -rf /var/cache/pacman/*
 
@@ -21,15 +24,16 @@ RUN groupadd -g 1000 archgroup && \
 USER archuser
 WORKDIR /home/archuser
 
-RUN mkdir -p ~/.cargo/bin && \
-    wget https://github.com/starship/starship/releases/download/v1.14.2/starship-x86_64-unknown-linux-gnu.tar.gz && \
-    tar xvzf starship-x86_64-unknown-linux-gnu.tar.gz && \
-    rm starship-x86_64-unknown-linux-gnu.tar.gz && \
-    mv starship ~/.cargo/bin/
+RUN sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-RUN mkdir -p ~/.config && \
-    touch ~/.config/starship.toml && \
-    echo 'export PATH=~/.cargo/bin:$PATH' >> ~/.zshrc && \
-    echo 'eval "$(starship init zsh)"' >> ~/.zshrc
+# Agrega alias
+RUN echo "alias ls=lsd" >> /home/archuser/.zshrc
+RUN echo "alias cat=bat" >> /home/archuser/.zshrc
+RUN echo "alias l='ls -la'" >> /home/archuser/.zshrc
+RUN echo "alias npm='sudo npm'" >> /home/archuser/.zshrc
+
+RUN git config --global --add safe.directory $HOME/project/*
+RUN sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="amuse"/' ~/.zshrc
+
 
 CMD ["/bin/zsh"]
